@@ -11,20 +11,25 @@ import icons from "@/constants/icons";
 import images from "@/constants/images";
 import { login } from "@/lib/appwrite";
 import { useGlobalContext } from "@/lib/GlobalProvider";
-import { Redirect } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { useEffect } from "react";
 
 const Singin = () => {
   const { isLogged, user, loading, refetch } = useGlobalContext();
+  const router = useRouter();
   if (isLogged && !loading) {
     return <Redirect href="/" />;
   }
-  console.log("isLogin", isLogged);
-
   const handleLogin = async () => {
     const result = await login();
-    console.log("result login", result);
-    if (!result) Alert.alert("error", "Login failed");
+    if (result) {
+      refetch();
+    }
+    if (!result) {
+      Alert.alert("error", "Login failed");
+    } else {
+      router.push("/");
+    }
   };
   return (
     <SafeAreaView className="bg-white flex-1">
