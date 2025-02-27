@@ -31,10 +31,27 @@ const Index = () => {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
-      <FeaturedCards />
-      <Cards />
-    </SafeAreaView>
+        <View className="gap-5 flex-row">
+          <FeaturedCards />
+          <FeaturedCards />
+          <FeaturedCards />
+          <FeaturedCards />
+          <FeaturedCards />
+        </View>
+        <View className="my-5">
+          <View className="flex-row justify-between items-center">
+            <Text className="text-xl font-rubik-bold text-black-300">Our Recommendation</Text>
+            <TouchableOpacity>
+              <Text className="text-base font-rubik-bold text-primary-300">See All</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View className="flex-row gap-5">
+          <Cards />
+          <Cards />
+        </View>
+      </View >
+    </SafeAreaView >
   );
 };
 export default Index;
