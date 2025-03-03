@@ -48,8 +48,6 @@ const SettingItem = ({
 
 const Profile = () => {
   const { user, refetch } = useGlobalContext();
-  console.log(user);
-
   const handleLogout = async () => {
     const res = await logout();
     if (res) {

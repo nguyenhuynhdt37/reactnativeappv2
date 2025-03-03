@@ -1,21 +1,50 @@
 import { Cards, FeaturedCards } from "@/components/Card";
 import Filter from "@/components/Filter";
+import NoResult from "@/components/NoResult";
 import Search from "@/components/Search";
 import icons from "@/constants/icons";
-import images from "@/constants/images";
+import { getLatestProperties, getProperties } from "@/lib/appwrite";
 import { useGlobalContext } from "@/lib/GlobalProvider";
-import seed from "@/lib/seed";
-import { Link } from "expo-router";
-import { View, Text, Image, TouchableOpacity, FlatList, Button } from "react-native";
+import { useAppwrite } from "@/lib/useAppwrite";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect } from "react";
+import { View, Text, Image, TouchableOpacity, FlatList, Button, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Index = () => {
   const { user } = useGlobalContext()
+  const routerElement: any = useRouter()
+  const params = useLocalSearchParams<{ query?: string, filter?: string }>()
+  const { data: LatestProperties, loading: latestPropertiesLoading } = useAppwrite({
+    fn: getLatestProperties,
+  })
+  const { data: properties, loading, refetch } = useAppwrite({
+    fn: getProperties,
+    params: {
+      filter: params.filter || 'All',
+      query: params.query || '',
+      limit: 6,
+    },
+    skip: true
+  })
+  useEffect(() => {
+    refetch({
+      filter: params.filter || 'All',
+      query: params.query || '',
+      limit: 6,
+    })
+  }, [params.filter, params.query])
+
+  const handleCardPress = (id: string) => {
+    routerElement.push(`/properties/${id}`);
+  }
+
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <Button className={{}} title="seed" onPress={seed} />
-      <FlatList data={[1, 2, 3, 4]} keyExtractor={(item) => (item.toString())} renderItem={() => (
-        <Cards />
+    <SafeAreaView className="flex-1 bg-white" >
+      <FlatList contentContainerClassName="pb-32" columnWrapperClassName="flex-row gap-5 px-5" data={properties} ListEmptyComponent={
+        loading ? <ActivityIndicator size={'large'} className="text-primary-300 mt-5" /> : <NoResult />
+      } numColumns={2} keyExtractor={(item) => item?.$id} renderItem={({ item }: any) => (
+        <Cards item={item} onPress={() => handleCardPress(item?.$id)} />
       )} ListHeaderComponent={() => (
         <View className="mx-5">
           <View className="flex-row justify-between items-center mt-5">
@@ -37,13 +66,16 @@ const Index = () => {
               </TouchableOpacity>
             </View>
           </View>
-          <View className="gap-5 flex-row">
-            <FeaturedCards />
-            <FeaturedCards />
-            <FeaturedCards />
-            <FeaturedCards />
-            <FeaturedCards />
-          </View>
+          {
+            latestPropertiesLoading ? <ActivityIndicator size={'large'} className="text-primary-300" /> : !LatestProperties || LatestProperties?.length === 0 ? < NoResult /> : (
+
+              <FlatList horizontal bounces={false} keyExtractor={(item) => item?.$id} contentContainerClassName="flex-row gap-5" data={LatestProperties} renderItem={({ item }) => {
+                return (
+                  <FeaturedCards item={item} onPress={() => handleCardPress(item?.$id)} />
+                )
+              }} />
+            )
+          }
           <View className="my-5">
             <View className="flex-row justify-between items-center">
               <Text className="text-xl font-rubik-bold text-black-300">Our Recommendation</Text>
@@ -52,10 +84,6 @@ const Index = () => {
               </TouchableOpacity>
             </View>
             <Filter />
-          </View>
-          <View className="flex-row gap-5">
-            <Cards />
-            <Cards />
           </View>
         </View >
       )} />

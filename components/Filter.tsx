@@ -17,7 +17,6 @@ const Filter = () => {
         setSelectedCategory(category)
         router.setParams({ filter: category })
     }
-    console.log(selectedCategory);
     return (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className='mt-3 mb-2'>
             {categories.map((item, index) => (

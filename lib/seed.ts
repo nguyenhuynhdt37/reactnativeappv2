@@ -16,22 +16,21 @@ const COLLECTIONS = {
 console.log(COLLECTIONS);
 
 const propertyTypes = [
-    "House",
-    "Townhouse",
-    "Condos",
-    "Duplexe",
-    "Studio",
-    "Villa",
-    "Apartment",
-    "Others",
+    'House',
+    'TowHouse',
+    'Condo',
+    'Duplex',
+    'Apartment',
+    'Others'
 ];
 
 const facilities = [
-    "Laundry",
-    "Parking",
-    "Gym",
-    "Wifi",
-    "Pet-frendly",
+    'Laundry',
+    'Parking',
+    'Gym',
+    'Wifi',
+    'Pet-frendly'
+
 ];
 
 function getRandomSubset<T>(
@@ -174,7 +173,7 @@ async function seed() {
                     image: image,
                     agent: assignedAgent.$id,
                     reviews: assignedReviews.map((review) => review.$id),
-                    gallery: assignedGalleries.map((gallery) => gallery.$id),
+                    gallaries: assignedGalleries.map((gallery) => gallery.$id),
                 }
             );
 

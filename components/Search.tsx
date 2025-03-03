@@ -12,7 +12,6 @@ const Search = () => {
         setSearch(value)
         debouncedSearch(value)
     }
-    console.log(debouncedSearch);
 
     return (
         <View className='flex-row items-center justify-between w-full px-4 rounded-lg bg-accent-100 border border-primary-100 mt-5 py-2'>
